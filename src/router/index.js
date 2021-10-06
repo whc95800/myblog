@@ -35,12 +35,12 @@ const routes = [
     children:[
       {
         path: '/blogList/blogedit',
-        name: '博文编辑',
+        name: 'blogedit',
         component: blogEdit,
       },
       {
         path: '/blogList/blogcreat',
-        name: '新建博文',
+        name: 'blogcreat',
         component: blogCreat,
       },
     ]

@@ -1,11 +1,33 @@
 import axios from "axios";
 
-export function getBlogList(token){
+export function getBlogList(){
   return axios({
     method:'get',
-    url: '/',
+    url: '/api/blogList',
     headers:{
-      Token:token
+      Token:sessionStorage.getItem('token')
+    }
+  })
+}
+
+export function userLogin(form) {
+    return axios({
+      method: 'post',
+      url: '/api/login',
+      data: {
+        account: form.account,
+        password: form.password
+      }
+    })
+}
+
+export function userRegister(form) {
+  return axios({
+    method:'post',
+    url: '/api/register',
+    data: {
+      account: form.account,
+      password: form.password
     }
   })
 }

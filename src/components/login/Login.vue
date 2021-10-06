@@ -45,80 +45,61 @@
 
 <script>
 import router from "@/router";
+import {userLogin,userRegister} from "@/api";
+import {ref,reactive} from "vue";
+
 export default{
   name:'login',
-  data(){
-    return {
-      errMsg:'',
-      isLogin:false,
-      passwordError: false,
-      existed: false,
-      form:{
-        account:'',
-        password:''
-      }
+  setup(){
+    let errMsg = ref('')
+    let isLogin = ref(false)
+    let form = reactive({account:'', password:''})
+    let passwordError = ref(false)
+    let existed = ref(false)
+
+    function changeType() {
+      isLogin.value = !isLogin.value
     }
-  },
-  methods:{
-    changeType() {
-      this.isLogin = !this.isLogin
-      this.form.account = ''
-      this.form.password = ''
-    },
-    login() {
-      const self = this;
-      if (self.form.account !== "" && self.form.password !== "") {
-        this.$axios({
-          method:'post',
-          url: 'api/login',
-          data: {
-            account: self.form.account,
-            password: self.form.password
-          }
-        })
-            .then( res => {
-              console.log(res.data)
-              if(res.data.code === 1) {
-                alert("登陆成功！");
-                sessionStorage.setItem("user",self.form.account)
-                sessionStorage.setItem("token",res.data.token)
-                router.push({path:'/blogList'})
-              }else{
-                  this.passwordError = true;
-                  this.errMsg = res.data.msg
-              }
-            })
+
+    function login() {
+      if (form.account !== "" && form.password !== "") {
+        userLogin(form).then( res => {
+          console.log(res.data)
+          if(res.data.code === 1) {
+            alert("登陆成功！");
+            sessionStorage.setItem("user",form.account)
+            sessionStorage.setItem("token",res.data.token)
+            router.push({path:'/blogList'})
+          }else{
+            this.passwordError = true;
+            this.errMsg = res.data.msg
+          }})
             .catch( err => {
               console.log(err);
             })
-      } else{
+      }else{
         alert("填写不能为空！");
       }
-    },
-    register(){
-      const self = this;
-      if(self.form.account !== "" && self.form.password !== ""){
-        this.$axios({
-          method:'post',
-          url: 'api/register',
-          data: {
-            account: self.form.account,
-            password: self.form.password
+    }
+
+    function register(){
+      if(form.account !== "" &&form.password !== ""){
+        userRegister(form).then(res => {
+          if(res.data.code ===1) {
+            alert("注册成功！");
+            login();
+          }else{
+            existed.value = true;
+            errMsg.value = res.data.msg
           }
-        }).then(res => {
-              if(res.data.code ===1) {
-                alert("注册成功！");
-                this.login();
-              }else{
-                  this.existed = true;
-                  this.errMsg = res.data.msg
-              }
-            })
+        })
       } else {
         alert("填写不能为空！");
       }
     }
-  }
+
+    return {errMsg,isLogin,passwordError,existed,form,changeType,login,register}
+  },
 }
 </script>
 

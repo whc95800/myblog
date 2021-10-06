@@ -11,7 +11,7 @@ export default {
   name: "Main",
   setup(){
     onMounted(() => {
-      getBlogList(sessionStorage.getItem('token'))
+      getBlogList()
           .then(res=>{
         console.log(res)
       })
