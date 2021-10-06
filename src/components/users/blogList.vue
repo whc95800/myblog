@@ -17,23 +17,28 @@
       </el-aside>
       <el-container>
         <el-header>
-          <span>博客内容</span>
+          <span>我的博客</span>
           <button class="bbutton" @click="this.$router.push({path:'/'})">返回主页</button>
         </el-header>
         <el-main>
           <router-view/>
         </el-main>
-        <el-footer>
-          <button class="bbutton" @click="this.$router.push({path:'/'})">返回顶部</button>
-        </el-footer>
+          <el-backtop/>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+import {ref} from "vue";
+
+
 export default {
   name: "blogList",
+  setup(){
+    let num = ref(1)
+    return {num};
+  }
 }
 </script>
 
@@ -48,12 +53,14 @@ export default {
       left: 50%;
     }
   }
-  .el-header,
-  .el-footer {
+  .el-header{
     background-color: #b3c0d1;
     color: var(--el-text-color-primary);
     text-align: center;
     line-height: 60px;
+    .span{
+      width: 100px;
+    }
     .bbutton{
       width: 100px;
       height: 40px;
@@ -67,8 +74,11 @@ export default {
       cursor: pointer;
     }
   }
-
-
+  .el-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .el-aside {
     background-color: #d3dce6;
     color: var(--el-text-color-primary);
@@ -79,8 +89,6 @@ export default {
   .el-main {
     background-color: #e9eef3;
     color: var(--el-text-color-primary);
-    text-align: center;
-    line-height: 160px;
   }
 
   body > .el-container {

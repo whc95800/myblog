@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import {onMounted} from "vue";
-import {getBlogList} from "@/api";
+// import {onMounted} from "vue";
+// import {getBlogList} from "@/api";
 export default {
   name: "Main",
-  setup(){
-    onMounted(() => {
-      getBlogList()
-          .then(res=>{
-        console.log(res)
-      })
-          .catch( err => {
-        console.log(err);
-      })
-    })
-    return {};
-  }
+  // setup(){
+  //   onMounted(() => {
+  //     getBlogList()
+  //         .then(res=>{
+  //       console.log(res)
+  //     })
+  //         .catch( err => {
+  //       console.log(err);
+  //     })
+  //   })
+  //   return {};
+  // }
 }
 </script>
 
