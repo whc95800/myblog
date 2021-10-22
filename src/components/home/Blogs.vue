@@ -2,7 +2,7 @@
   <div style='height:100%'>
     <el-scrollbar style='height:100%'>
     <el-space direction="vertical" fill wrap>
-      <el-card v-for="i in blogLength" :key="i" class="box-card" style="width: 1000px">
+      <el-card v-for="i in tableData.length" :key="i" class="box-card" style="width: 1000px">
         <div class="title"><a>{{tableData[i-1].title}}</a></div>
         <div class="content"><a>{{tableData[i-1].content}}</a></div>
       </el-card>
@@ -56,11 +56,9 @@ export default {
     function getList(){
       getBlogList(pages)
           .then(res=>{
+            console.log(res.data)
             tableData.value = []
-            for(let i=0;i<res.data.list.length;i++) {
-              let arr={title: res.data.list[i].title, content: res.data.list[i].content, id:res.data.list[i]._id}
-              tableData.value.push(arr)
-            }
+            tableData.value = res.data.list
             blogLength.value = res.data.list.length
             totalPage.value = res.data.total
           })
