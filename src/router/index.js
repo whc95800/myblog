@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from "@/components/login/Login";
+import Blogs from "@/components/home/Blogs";
 import Home from "@/components/home/Home";
 import blogCreat from "@/components/users/blogCreat";
-import blogEdit from "@/components/users/blogEdit";
+import managementPage from "@/components/users/managementPage";
 import blogList from "@/components/users/blogList";
+import userEdit from "@/components/users/userEdit";
+import blogContents from "@/components/home/blogContents";
 
 
 const routes = [
@@ -11,7 +14,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    hidden:true
+    hidden:true,
+    children:[
+      {
+        path: '/blogs',
+        name: 'Blogs',
+        component: Blogs,
+        children:[
+          {
+            path: '/blogs/:id',
+            name: 'blogContents',
+            component: blogContents,
+          },
+        ]
+      },
+      ]
   },
   {
     path: '/login',
@@ -21,9 +38,9 @@ const routes = [
   },
 
   {
-    path: '/blogList',
-    name: 'blogList',
-    component: blogList,
+    path: '/management',
+    name: 'management',
+    component: managementPage,
     beforeEnter:(to,from,next)=>{
       let token = sessionStorage.getItem("token")
       if(token){
@@ -34,17 +51,23 @@ const routes = [
     },
     children:[
       {
-        path: '/blogList/blogedit',
-        name: 'blogedit',
-        component: blogEdit,
+        path: '/management/blogList',
+        name: 'blogList',
+        component: blogList,
       },
       {
-        path: '/blogList/blogcreat',
+        path: '/management/blogCreat',
         name: 'blogcreat',
         component: blogCreat,
       },
+      {
+        path: '/blogEdit/:id',
+        name: 'blogEdit',
+        component: userEdit,
+        hidden:true,
+      },
     ]
-  }
+  },
 ]
 
 const router = createRouter({

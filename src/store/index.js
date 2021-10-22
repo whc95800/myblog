@@ -2,10 +2,11 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
+    id : ''
   },
   mutations: {
-    initRouter(state,data){
-      state.router = data;
+    getBlogId:function (state,id){
+      state.id = id
     }
   },
   actions: {

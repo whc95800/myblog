@@ -1,100 +1,118 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-aside width="200px">
-        <el-menu router>
-          <el-sub-menu index="1"
-                       v-for="(item,index) in $router.options.routes" :key="index" v-show="!item.hidden&&item.name==='blogList'">
-            <template #title>
-              <span>管理列表</span>
-            </template>
-              <el-menu-item :index="children.path"
-                            v-for="(children,indexj) in item.children" :key="indexj">
-                {{children.name}}
-              </el-menu-item>
-          </el-sub-menu>
-        </el-menu>
-      </el-aside>
-      <el-container>
-        <el-header>
-          <span>我的博客</span>
-          <button class="bbutton" @click="this.$router.push({path:'/'})">返回主页</button>
-        </el-header>
-        <el-main>
-          <router-view/>
-        </el-main>
-          <el-backtop/>
-      </el-container>
-    </el-container>
+  <div>
+    <el-table :data="
+      tableData.filter(
+        (data) =>
+          !search || data.title.toLowerCase().includes(search.toLowerCase())
+      )
+    "
+        style="width: 100%">
+      <el-table-column label="Date" prop="date"/>
+      <el-table-column label="Title" prop="title" />
+      <el-table-column align="right">
+        <template #header>
+          <el-input v-model="search" size="mini" placeholder="搜索" />
+        </template>
+        <template #default="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+          >Edit</el-button
+          >
+          <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+          >Delete</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
+  <el-footer>
+    <el-pagination
+        v-model:currentPage="pages.page"
+        :page-sizes="[5, 10, 15, 20, 50, 100]"
+        :page-size="pages.size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalPage"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    >
+    </el-pagination>
+  </el-footer>
 </template>
 
 <script>
-import {ref} from "vue";
 
+import {ref,onBeforeMount} from "vue";
+import {blogRemove, getBlogList} from "@/api";
+import router from "@/router";
+import { useStore } from 'vuex'
 
 export default {
   name: "blogList",
-  setup(){
-    let num = ref(1)
-    return {num};
-  }
+
+  setup() {
+    const tableData =ref([])
+    const search = ref('')
+    const pages = ref({page:1, size:5})
+    const totalPage = ref(0)
+    const store = useStore()
+
+    const handleSizeChange = (val) => {
+      pages.value.size = val
+      getList()
+    }
+    const handleCurrentChange = (val) => {
+      pages.value.page = val
+      getList()
+    }
+
+    onBeforeMount(() => {
+      getList()
+  })
+
+    function getList(){
+      getBlogList(pages)
+          .then(res=>{
+            tableData.value = []
+            for(let i=0;i<res.data.list.length;i++) {
+              let arr={date: res.data.list[i].creatDate, title: res.data.list[i].title, id:res.data.list[i]._id}
+              tableData.value.push(arr)
+            }
+            totalPage.value = res.data.total
+          })
+          .catch( err => {
+            console.log(err);
+          })
+    }
+
+    function handleEdit(index, row) {
+      store.commit('getBlogId',row.id)
+      router.push({path:`/blogEdit/${row.id}`})
+    }
+    function handleDelete(index, row) {
+      store.commit('getBlogId',row.id)
+      blogRemove(row.id).then(res => {
+        if (res.data.code === 1) {
+          alert("删除成功！");
+          router.push({path:'/management'})
+        }
+      })
+          .catch(err => {
+            console.log(err);
+          })
+    }
+
+    return {
+      tableData,search,pages,totalPage,handleEdit,handleDelete,handleCurrentChange,handleSizeChange,
+    }
+  },
 }
 </script>
 
-<style lang="less">
-.common-layout{
-  .el-header{
-    display: flex;
-    justify-content: right;
-    span{
-      position: absolute;
-      width: 100px;
-      left: 50%;
-    }
-  }
-  .el-header{
-    background-color: #b3c0d1;
-    color: var(--el-text-color-primary);
-    text-align: center;
-    line-height: 60px;
-    .span{
-      width: 100px;
-    }
-    .bbutton{
-      width: 100px;
-      height: 40px;
-      margin: 10px 0;
-      border-radius: 24px;
-      border: none;
-      outline: none;
-      background-color: rgb(57,167,176);
-      color: #fff;
-      font-size: 0.9em;
-      cursor: pointer;
-    }
-  }
-  .el-footer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .el-aside {
-    background-color: #d3dce6;
-    color: var(--el-text-color-primary);
-    text-align: center;
-    line-height: 200px;
-  }
+<style lang="less" scoped>
 
-  .el-main {
-    background-color: #e9eef3;
-    color: var(--el-text-color-primary);
-  }
-
-  body > .el-container {
-    margin-bottom: 40px;
-    height: 100%;
-  }
+.el-footer {
+  background-color: #d3dce6 ;
 }
-
 </style>

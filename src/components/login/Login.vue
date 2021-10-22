@@ -23,7 +23,7 @@
           </div>
           <div class="bbutton-p">
             <button class="bbutton" @click="register">注册</button>
-            <button class="bbutton" @click="this.$router.push({path:'/'})">返回主页</button>
+            <button class="bbutton" @click="this.$router.push({path:'/blogs'})">返回主页</button>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default{
             alert("登陆成功！");
             sessionStorage.setItem("user",form.account)
             sessionStorage.setItem("token",res.data.token)
-            router.push({path:'/blogList'})
+            router.push({path:'/management'})
           }else{
             this.passwordError = true;
             this.errMsg = res.data.msg

@@ -24,6 +24,7 @@
 <script>
 import {reactive} from "vue";
 import {userBlogCreat} from "@/api";
+import router from "@/router";
 
 export default {
   name: "blogCreat",
@@ -34,6 +35,7 @@ export default {
         userBlogCreat(blogForm).then( res => {
           if(res.data.code === 1) {
             alert("发表成功！");
+            router.push({path:'/management/blogList'})
           }})
             .catch( err => {
               console.log(err);

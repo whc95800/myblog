@@ -7,9 +7,9 @@ export function getBlogList(pages){
     headers:{
       Token:sessionStorage.getItem('token')
     },
-    data: {
-      page: pages.value.page,
-      size: pages.value.size
+    params: {
+      size: pages.value.size,
+      page: pages.value.page
     }
   })
 }
@@ -36,14 +36,14 @@ export function userRegister(form) {
   })
 }
 
-export function getBlog(){
+export function getBlog(blogId){
   return axios({
     method:'get',
     url: '/api/blog',
     headers:{
       Token:sessionStorage.getItem('token')
     },
-    params:{id:''}
+    params:{id:blogId}
   })
 }
 
@@ -61,7 +61,7 @@ export function userBlogCreat(blogForm) {
   })
 }
 
-export function userBlogEdit(blogForm) {
+export function userBlogEdit(blog) {
   return axios({
     method: 'post',
     url: '/api/blogEdit',
@@ -69,8 +69,22 @@ export function userBlogEdit(blogForm) {
       Token:sessionStorage.getItem('token')
     },
     data: {
-      title: blogForm.title,
-      content: blogForm.content
+      title: blog.title,
+      content: blog.content,
+      id: blog.id
+    }
+  })
+}
+
+export function blogRemove(removeId) {
+  return axios({
+    method: 'post',
+    url: '/api/blogRemove',
+    headers:{
+      Token:sessionStorage.getItem('token')
+    },
+    data: {
+      id: removeId
     }
   })
 }

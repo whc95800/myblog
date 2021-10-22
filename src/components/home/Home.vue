@@ -1,4 +1,5 @@
 <template>
+  <el-scrollbar style='height:100%'>
   <el-container class="home">
     <el-header>
         <div class="left">
@@ -15,8 +16,8 @@
                >
               <el-sub-menu index="" v-if="user">
                 <template #title><el-avatar v-show="user" icon="el-icon-user-solid"></el-avatar></template>
-                <el-menu-item index="/blogList">博文编辑</el-menu-item>
-                <el-menu-item>注销当前用户</el-menu-item>
+                <el-menu-item index="/management">博文编辑</el-menu-item>
+                <el-menu-item index="/login" @click="loginOut">注销当前用户</el-menu-item>
               </el-sub-menu>
             </el-menu>
           </div>
@@ -25,20 +26,23 @@
           </div>
         </div>
     </el-header>
-    <el-main><Main/></el-main>
+    <el-main><router-view/></el-main>
   </el-container>
+  </el-scrollbar>
 </template>
 
 <script>
-import Main from "@/components/home/Main";
 import {ref} from "vue";
 export default {
   name: "Home",
-  components: {Main},
   setup(){
     const user = sessionStorage.getItem('user')
     const activeIndex = ref('1')
-    return{user,activeIndex}
+    function loginOut(){
+      sessionStorage.setItem('user','')
+      sessionStorage.setItem('token','')
+    }
+    return{user,activeIndex,loginOut}
   }
 }
 </script>
@@ -72,7 +76,7 @@ a{
       display: flex;
       align-items: center;
       .el-menu{
-        justify-content: center;
+        justify-content: right;
         width: 200px;
         align-items: center;
         border-bottom: none;
@@ -89,8 +93,10 @@ a{
     background-color: #e9eef3;
     color: var(--el-text-color-primary);
     text-align: center;
-    line-height: 160px;
     margin-top: 40px;
     height:auto;
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
   }
 </style>
