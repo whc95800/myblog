@@ -22,6 +22,7 @@
             </el-menu>
           </div>
           <div class="login">
+            <router-link class="goHome" to="/blogs">返回首页</router-link>
             <router-link to="/login">登录/注册</router-link>
           </div>
         </div>
@@ -84,6 +85,9 @@ a{
       .login {
         width: auto;
         margin-right: 20px;
+        .goHome{
+          margin-right: 20px;
+        }
       }
       }
     }

@@ -20,13 +20,11 @@ const routes = [
         path: '/blogs',
         name: 'Blogs',
         component: Blogs,
-        children:[
-          {
-            path: '/blogs/:id',
-            name: 'blogContents',
-            component: blogContents,
-          },
-        ]
+      },
+      {
+        path: '/blogs/:id',
+        name: 'blogContents',
+        component: blogContents,
       },
       ]
   },

@@ -2,9 +2,12 @@
   <div style='height:100%'>
     <el-scrollbar style='height:100%'>
     <el-space direction="vertical" fill wrap>
-      <el-card v-for="i in tableData.length" :key="i" class="box-card" style="width: 1000px">
-        <div class="title"><a>{{tableData[i-1].title}}</a></div>
-        <div class="content"><a>{{tableData[i-1].content}}</a></div>
+      <el-card v-for="(item,index) in tableData" :key="index"
+               class="box-card"
+               style="width: 1000px"
+               @click="inToBlog(item._id)">
+        <div class="title"><a>{{item.title}}</a></div>
+        <div class="content"><a>{{item.content}}</a></div>
       </el-card>
     </el-space>
     </el-scrollbar>
@@ -48,15 +51,14 @@ export default {
       getList()
     })
 
-    function inToBlog() {
-      store.commit('getBlogId',tableData.value.id)
-      router.push({path:`/blogs/${tableData.value.id}`})
+    function inToBlog(id) {
+      store.commit('getBlogId',id)
+      router.push({path:`/blogs/${id}`})
     }
 
     function getList(){
       getBlogList(pages)
           .then(res=>{
-            console.log(res.data)
             tableData.value = []
             tableData.value = res.data.list
             blogLength.value = res.data.list.length

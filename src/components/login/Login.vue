@@ -103,7 +103,7 @@ export default{
 }
 </script>
 
-<style scoped="scoped">
+<style scoped>
 .login-register{
   width: 100vw;
   height: 100vh;
